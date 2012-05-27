@@ -102,12 +102,15 @@ server {
 CONFIG
 
     create_tmp_file(config, domain)
+    top.upload "tmp/#{domain}", "/tmp/#{domain}", :via => :scp
+
     with_user(sudo_user) do
       run "#{sudo} mkdir -p #{nginx_sites_enabled_path}"
       run "#{sudo} rm -f #{nginx_sites_enabled_path}/#{domain}"
-      top.upload "tmp/#{domain}", "#{nginx_sites_enabled_path}/", :via => :scp
+      run "#{sudo} mv /tmp/#{domain} #{nginx_sites_enabled_path}/#{domain}"
       run "#{sudo} chown #{user}:#{group} #{nginx_sites_enabled_path}/#{domain}"
     end
+    
     File.delete("tmp/#{domain}")
     nginx.reload
   end
