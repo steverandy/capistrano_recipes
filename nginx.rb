@@ -104,7 +104,7 @@ CONFIG
     create_tmp_file(config, domain)
     with_user(sudo_user) do
       run "#{sudo} mkdir -p #{nginx_sites_enabled_path}"
-      run "#{sudo} rm #{nginx_sites_enabled_path}/#{domain}"
+      run "#{sudo} rm -f #{nginx_sites_enabled_path}/#{domain}"
       top.upload "tmp/#{domain}", "#{nginx_sites_enabled_path}/", :via => :scp
       run "#{sudo} chown #{user}:#{group} #{nginx_sites_enabled_path}/#{domain}"
     end
