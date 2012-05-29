@@ -6,27 +6,27 @@ set_default(:nginx_sites_enabled_path) { "/usr/local/etc/nginx/sites-enabled" }
 
 
 namespace :nginx do
-  desc "Start nginx."
+  desc "Start nginx"
   task :start do
     with_user(sudo_user) do
       run "#{sudo} #{nginx_start_command}"
     end
   end
 
-  desc "Stop nginx."
+  desc "Stop nginx"
   task :stop do
     with_user(sudo_user) do
       run "#{sudo} #{nginx_stop_command}"
     end
   end
 
-  desc "Restart nginx."
+  desc "Restart nginx"
   task :restart do
     nginx.stop
     nginx.start
   end
 
-  desc "Reload nginx. If there is no nginx process present, then start it. Use when configuration file is modified."
+  desc "Reload nginx (to be used when configuration file is modified)"
   task :reload do
     unless remote_file_exists? nginx_pid_path
       nginx.start
@@ -36,7 +36,7 @@ namespace :nginx do
     end
   end
 
-  desc "Add nginx configuration and enable it."
+  desc "Add nginx configuration and enable it"
   task :create do
     config = <<-CONFIG
 upstream #{application}_app_server {
@@ -115,13 +115,13 @@ CONFIG
     nginx.reload
   end
 
-  desc "Remove nginx configuration and disable it."
+  desc "Remove nginx configuration and disable it"
   task :destroy do
     run "rm #{nginx_sites_enabled_path}/#{domain}"
     nginx.reload
   end
 
-  desc "Purge nginx proxy cache by removing its cache directory."
+  desc "Purge nginx proxy cache by removing its cache directory"
   task :purge_cache do
     with_user(sudo_user) do
       run "#{sudo} rm -r /usr/local/var/nginx/cache/all"

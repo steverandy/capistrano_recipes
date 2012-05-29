@@ -1,5 +1,5 @@
 namespace :resque do
-  desc "Start Resque process as a daemon."
+  desc "Start Resque process as a daemon"
   task :start do
     run "cd #{current_path} && bundle exec resque-pool --daemon --environment production"
   end
@@ -22,7 +22,7 @@ namespace :resque do
     end
   end
 
-  desc "Stop processing any new job without stopping Resque process by sending USR2 signal."
+  desc "Stop processing any new job without stopping Resque process by sending USR2 signal"
   task :stop_processing_job do
     if remote_file_exists? resque_pid
       run "kill -s USR2 `cat #{current_path}/tmp/pids/resque-pool.pid`"

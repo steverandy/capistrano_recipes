@@ -9,7 +9,7 @@ namespace :deploy do
 end
 
 namespace :unicorn do
-  desc "Start Unicorn process as a daemon."
+  desc "Start Unicorn process as a daemon"
   task :start do
     run "cd #{current_path} && BUNDLE_GEMFILE=#{current_path}/Gemfile bundle exec unicorn -c #{unicorn_config} -E production -D"
   end
@@ -33,7 +33,7 @@ namespace :unicorn do
     end
   end
 
-  desc "Restart Unicorn process."
+  desc "Restart Unicorn process"
   task :restart do
     unicorn.stop
     unicorn.start
