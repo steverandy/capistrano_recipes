@@ -1,15 +1,22 @@
 # Capistrano Recipes
 
-Sample code for deploy.rb:
+Add capistrano_recipes as git submodule
+    
+    cd config
+    git submodule add git://github.com/steverandy/capistrano_recipes.git
+    git submodule init
+    git submodule update
+
+Write deploy.rb script
 
     require "capistrano_colors"
     require "bundler/capistrano"
     require "whenever/capistrano"
 
-    load "config/recipes/base"
-    load "config/recipes/mongoid"
-    load "config/recipes/unicorn"
-    load "config/recipes/nginx"
+    load "config/capistrano_recipes/base"
+    load "config/capistrano_recipes/mongoid"
+    load "config/capistrano_recipes/unicorn"
+    load "config/capistrano_recipes/nginx"
 
     server "domain.com", :web, :app, :db, :primary => true
 
