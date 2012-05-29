@@ -33,7 +33,7 @@ after "deploy:finalize_update", "deploy:symlink_shared"
 after "deploy:restart", "deploy:set_permissions"
 
 namespace :deploy do
-  desc "Symlink shared configs and folders on each release."
+  desc "Symlink shared configs and folders on each release"
   task :symlink_shared do
     %w(config sockets system).each do |directory|
       unless remote_file_exists?("#{shared_path}/#{directory}")
@@ -46,7 +46,7 @@ namespace :deploy do
     end
   end
 
-  desc "Sets permissions for Rails Application."
+  desc "Sets permissions for Rails Application"
   task :set_permissions do
     run "chmod -R go-rwx #{deploy_to}/releases/*"
     run "chmod -R go-rwx #{deploy_to}/shared/*"
@@ -63,11 +63,23 @@ namespace :deploy do
   end
 
   namespace :web do
-    desc "Use this task to intercept all http request and show 503 maintenance page."
+    desc "Use this task to intercept all http request and show 503 maintenance page"
     task :disable, :roles => :web do
       on_rollback { rm "#{shared_path}/system/maintenance.html" }
       maintenance = File.read("./public/maintenance.html")
       put maintenance, "#{shared_path}/system/maintenance.html", :mode => 0644
+    end
+  end
+
+  namespace :assets do
+    desc "Assets precompilation is only performed when any of the assets source file changed"
+    task :precompile, :roles => :web do
+      from = source.next_revision(current_revision)
+      if capture("cd #{latest_release} && #{source.local.log(from)} vendor/assets/ app/assets/ lib/assets/ | wc -l").to_i > 0
+        run %Q{cd #{latest_release} && #{rake} RAILS_ENV=#{rails_env} #{asset_env} assets:precompile}
+      else
+        logger.info "Skipping asset pre-compilation because there were no asset changes"
+      end
     end
   end
 end
