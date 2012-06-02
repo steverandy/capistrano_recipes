@@ -73,12 +73,21 @@ namespace :deploy do
 
   namespace :assets do
     desc "Assets precompilation is only performed when any of the assets source file changed"
-    task :precompile, :roles => :web do
-      from = source.next_revision(current_revision)
-      if capture("cd #{latest_release} && #{source.local.log(from)} vendor/assets/ app/assets/ lib/assets/ | wc -l").to_i > 0
+    task :precompile, :roles => :web, :except => {:no_release => true}, :only => {:primary => true} do
+      releases_count = capture("find #{deploy_to}/releases/ -maxdepth 1 -mindepth 1 -type d | wc -l").to_i
+      precompile = true
+      paths = %w(app/assets/ lib/assets/ vendor/assets/ config/environments/production.rb)
+
+      if releases_count > 1
+        from = source.next_revision(current_revision)
+        unless capture("cd #{latest_release} && #{source.local.log(from)} #{paths.join(' ')} | wc -l").to_i > 0
+          precompile = false
+          logger.info "Skipping asset pre-compilation because there were no asset changes"
+        end
+      end
+
+      if precompile
         run %Q{cd #{latest_release} && #{rake} RAILS_ENV=#{rails_env} #{asset_env} assets:precompile}
-      else
-        logger.info "Skipping asset pre-compilation because there were no asset changes"
       end
     end
   end
