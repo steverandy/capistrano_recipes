@@ -1,5 +1,7 @@
 # Capistrano Recipes
 
+Simple capistrano recipes for single server deployment.
+
 Add capistrano_recipes as git submodule
     
     cd config
