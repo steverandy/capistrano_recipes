@@ -4,10 +4,7 @@ Simple capistrano recipes for single server deployment.
 
 Add capistrano_recipes as git submodule
     
-    cd config
-    git submodule add git://github.com/steverandy/capistrano_recipes.git
-    git submodule init
-    git submodule update
+    git submodule add git://github.com/steverandy/capistrano_recipes.git config/capistrano_recipes
 
 Write deploy.rb script
 
