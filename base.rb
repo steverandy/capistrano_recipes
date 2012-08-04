@@ -60,6 +60,7 @@ namespace :deploy do
     run "chmod -R go+w #{deploy_to}/shared/sockets/*"
     run "chmod -R go+rx #{deploy_to}/shared/assets"
     run "chmod -R go+rx #{deploy_to}/shared/system"
+    run "chmod -R go+rx #{deploy_to}/shared/videos"
   end
 
   namespace :web do
