@@ -3,7 +3,7 @@
 Simple capistrano recipes for single server deployment.
 
 Add capistrano_recipes as git submodule
-    
+
     git submodule add git://github.com/steverandy/capistrano_recipes.git config/capistrano_recipes
 
 Write deploy.rb script
@@ -14,8 +14,7 @@ Write deploy.rb script
 
     load "config/capistrano_recipes/base"
     load "config/capistrano_recipes/mongoid"
-    load "config/capistrano_recipes/unicorn"
-    load "config/capistrano_recipes/nginx"
+    load "config/capistrano_recipes/puma"
 
     server "domain.com", :web, :app, :db, :primary => true
 
