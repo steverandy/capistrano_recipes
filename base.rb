@@ -30,7 +30,7 @@ end
 set_default(:symlink_shared_pair) { [] }
 
 after "deploy:finalize_update", "deploy:symlink_shared"
-after "deploy:restart", "deploy:set_permissions"
+after "deploy:restart", "deploy:set_releases_permissions"
 
 namespace :deploy do
   desc "Symlink shared configs and folders on each release"
@@ -46,15 +46,17 @@ namespace :deploy do
     end
   end
 
-  desc "Sets permissions for Rails Application"
-  task :set_permissions do
+  desc "Set permissions for releases directory"
+  task :set_releases_permissions do
     run "chmod -R go-rwx #{deploy_to}/releases/*"
-    run "chmod -R go-rwx #{deploy_to}/shared/*"
-
     run "chmod go+rx #{current_path}"
     run "find #{current_path}/public -type d -exec chmod go+rx {} \\;"
     run "chmod -R go+r #{current_path}/public/*"
+  end
 
+  desc "Set permissions for shared directory"
+  task :set_shared_permissions do
+    run "chmod -R go-rwx #{deploy_to}/shared/*"
     run "chmod go+rx #{deploy_to}/shared"
     run "chmod go+rx #{deploy_to}/shared/sockets"
     run "chmod -R go+w #{deploy_to}/shared/sockets/*"
