@@ -14,7 +14,7 @@ Write deploy.rb script
 
     load "config/capistrano_recipes/base"
     load "config/capistrano_recipes/mongoid"
-    load "config/capistrano_recipes/puma"
+    load "config/capistrano_recipes/unicorn"
 
     server "domain.com", :web, :app, :db, :primary => true
 
