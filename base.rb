@@ -65,6 +65,11 @@ namespace :deploy do
     run "chmod -R go+rx #{deploy_to}/shared/videos"
   end
 
+  desc "Run this for the first deploment"
+  task :bootstrap, :roles => :web, :except => {:no_release => true} do
+    setup; cold; restart; set_shared_permissions;
+  end
+
   namespace :web do
     desc "Use this task to intercept all http request and show 503 maintenance page"
     task :disable, :roles => :web do
