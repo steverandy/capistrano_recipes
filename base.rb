@@ -31,6 +31,7 @@ set_default(:symlink_shared_pair) { [] }
 
 after "deploy:finalize_update", "deploy:symlink_shared"
 after "deploy:restart", "deploy:set_releases_permissions"
+after "deploy", "deploy:cleanup"
 
 namespace :deploy do
   desc "Symlink shared configs and folders on each release"
