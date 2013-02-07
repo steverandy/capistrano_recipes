@@ -1,6 +1,5 @@
 set_default(:unicorn_config_path) { "#{current_path}/config/unicorn.rb" }
 set_default(:unicorn_pid_path) { "#{current_path}/tmp/pids/unicorn.pid" }
-set_default(:unicorn_socket) { "#{shared_path}/sockets/unicorn.sock" }
 
 namespace :unicorn do
   desc "Start Unicorn"
