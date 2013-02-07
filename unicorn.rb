@@ -2,19 +2,13 @@ set_default(:unicorn_config_path) { "#{current_path}/config/unicorn.rb" }
 set_default(:unicorn_pid_path) { "#{current_path}/tmp/pids/unicorn.pid" }
 set_default(:unicorn_socket) { "#{shared_path}/sockets/unicorn.sock" }
 
-namespace :deploy do
-  task :restart do
-    unicorn.reload
-  end
-end
-
 namespace :unicorn do
-  desc "Start Unicorn process as a daemon"
+  desc "Start Unicorn"
   task :start do
     run "cd #{current_path} && BUNDLE_GEMFILE=#{current_path}/Gemfile bundle exec unicorn -c #{unicorn_config_path} -E production -D"
   end
 
-  desc "Stop Unicorn process gracefully by sending QUIT signal. All pending requests will be completed before workers are killed."
+  desc "Stop Unicorn gracefully"
   task :stop do
     if remote_file_exists? unicorn_pid_path
       run "kill -s QUIT `cat #{unicorn_pid_path}`"
@@ -23,7 +17,7 @@ namespace :unicorn do
     end
   end
 
-  desc "Stop Unicorn process immediately by sending TERM signal. All pending request will be dropped immediately."
+  desc "Stop Unicorn immediately"
   task :force_stop do
 
     if remote_file_exists? unicorn_pid_path
@@ -33,14 +27,14 @@ namespace :unicorn do
     end
   end
 
-  desc "Restart Unicorn process"
+  desc "Restart Unicorn"
   task :restart do
     unicorn.stop
     unicorn.start
   end
 
-  desc "Reload Unicorn process by sending USR2 signal, without droppping any pending requests. If no Unicorn process present, one will be started automatically."
-  task :reload do
+  desc "Restart Unicorn in rolling mode"
+  task :rolling_restart do
     if remote_file_exists? unicorn_pid_path
       run "kill -s USR2 `cat #{unicorn_pid_path}`"
     else
