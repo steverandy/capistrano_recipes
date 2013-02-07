@@ -1,6 +1,6 @@
 set_default(:puma_role) { :app }
+set_default(:puma_config_path) { "#{current_path}/config/puma.rb" }
 set_default(:puma_pid_path) { "#{current_path}/tmp/pids/puma.pid" }
-set_default(:puma_config_path) { "#{shared_path}/sockets/pumactl.sock" }
 
 namespace :puma do
   desc "Start puma"
