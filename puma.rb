@@ -6,7 +6,7 @@ namespace :puma do
   desc "Start puma"
   task :start, :roles => lambda { fetch(:puma_role) }, :on_no_matching_servers => :continue do
     puma_env = fetch(:rack_env, fetch(:rails_env, "production"))
-    run "cd #{current_path} && #{fetch(:bundle_cmd, 'bundle')} exec puma --daemon --environment #{puma_env} --config #{puma_config_path}", :pty => false
+    run "cd #{current_path} && #{fetch(:bundle_cmd, 'bundle')} exec puma --daemon --environment #{puma_env} --config #{puma_config_path}"
   end
 
   desc "Stop puma"
