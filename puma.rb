@@ -11,7 +11,7 @@ namespace :puma do
 
   desc "Stop puma"
   task :stop, :roles => lambda { fetch(:puma_role) }, :on_no_matching_servers => :continue do
-    run "kill -s SIGTERM `cat #{puma_pid_path}`"
+    run "kill -s TERM `cat #{puma_pid_path}`"
   end
 
   desc "Halt puma"
@@ -24,7 +24,7 @@ namespace :puma do
     unless remote_file_exists? puma_pid_path
       start; return;
     end
-    run "kill -s SIGUSR2 `cat #{puma_pid_path}`"
+    run "kill -s USR2 `cat #{puma_pid_path}`"
   end
 
   desc "Restart puma in phased mode"
@@ -32,6 +32,6 @@ namespace :puma do
     unless remote_file_exists? puma_pid_path
       start; return;
     end
-    run "kill -s SIGUSR1 `cat #{puma_pid_path}`"
+    run "kill -s USR1 `cat #{puma_pid_path}`"
   end
 end
