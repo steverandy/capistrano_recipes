@@ -16,16 +16,6 @@ namespace :unicorn do
     end
   end
 
-  desc "Stop Unicorn immediately"
-  task :force_stop do
-
-    if remote_file_exists? unicorn_pid_path
-      run "kill -s TERM `cat #{unicorn_pid_path}`"
-    else
-      puts "Cannot stop Unicorn because pid file does not exist."
-    end
-  end
-
   desc "Restart Unicorn"
   task :restart do
     unicorn.stop
