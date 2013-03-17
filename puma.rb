@@ -19,19 +19,19 @@ namespace :puma do
     run "kill -s QUIT `cat #{puma_pid_path}`"
   end
 
-  desc "Restart puma in phased mode"
-  task :phased_restart, :roles => lambda { fetch(:puma_role) }, :on_no_matching_servers => :continue do
+  desc "Restart puma"
+  task :restart, :roles => lambda { fetch(:puma_role) }, :on_no_matching_servers => :continue do
     if remote_file_exists? puma_pid_path
-      run "kill -s USR1 `cat #{puma_pid_path}`"
+      run "kill -s USR2 `cat #{puma_pid_path}`"
     else
       start
     end
   end
 
-  desc "Restart puma"
-  task :restart, :roles => lambda { fetch(:puma_role) }, :on_no_matching_servers => :continue do
+  desc "Restart puma in phased mode"
+  task :phased_restart, :roles => lambda { fetch(:puma_role) }, :on_no_matching_servers => :continue do
     if remote_file_exists? puma_pid_path
-      run "kill -s USR2 `cat #{puma_pid_path}`"
+      run "kill -s USR1 `cat #{puma_pid_path}`"
     else
       start
     end
