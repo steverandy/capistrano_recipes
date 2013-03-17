@@ -31,3 +31,5 @@ namespace :unicorn do
     end
   end
 end
+
+after "deploy:restart", "unicorn:rolling_restart"
