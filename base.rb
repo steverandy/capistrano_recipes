@@ -60,9 +60,9 @@ namespace :deploy do
     run "chmod go+rx #{deploy_to}/shared"
     run "chmod go+rx #{deploy_to}/shared/sockets"
     run "chmod -R go+w #{deploy_to}/shared/sockets/*"
+    run "chmod -R go-rwx #{deploy_to}/shared/config"
     run "chmod -R go+rx #{deploy_to}/shared/assets"
     run "chmod -R go+rx #{deploy_to}/shared/system"
-    run "chmod -R go+rx #{deploy_to}/shared/videos"
   end
 
   desc "Run this for the first deploment"
