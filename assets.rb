@@ -7,7 +7,7 @@ after "deploy:update_code", "deploy:assets:precompile"
 
 namespace :deploy do
   namespace :assets do
-    task :precompile, :roles => assets_role, :except => {:no_release => true} do
+    task :precompile, :roles => lambda { assets_role }, :except => {:no_release => true} do
       run_locally "rake assets:clean && rake assets:precompile"
       run_locally "cd public && tar -jcf assets.tar.bz2 assets"
       top.upload "public/assets.tar.bz2", "#{shared_path}", :via => :scp
@@ -16,7 +16,7 @@ namespace :deploy do
       run_locally "rake assets:clean"
     end
 
-    task :symlink, :roles => assets_role, :except => {:no_release => true} do
+    task :symlink, :roles => lambda { assets_role }, :except => {:no_release => true} do
       run <<-CMD.compact
         rm -rf #{latest_release}/public/#{assets_prefix} &&
         mkdir -p #{latest_release}/public &&
