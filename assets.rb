@@ -1,4 +1,6 @@
-set_default(:assets_role) { [:web] }
+_cset :assets_prefix, "assets"
+_cset :shared_assets_prefix, "assets"
+_cset :assets_role, [:web]
 
 before "deploy:finalize_update", "deploy:assets:symlink"
 after "deploy:update_code", "deploy:assets:precompile"
@@ -14,8 +16,13 @@ namespace :deploy do
       run_locally "rake assets:clean"
     end
 
-    task :symlink, roles: :web do
-      run ("rm -rf #{latest_release}/public/assets && mkdir -p #{latest_release}/public && mkdir -p #{shared_path}/assets && ln -s #{shared_path}/assets #{latest_release}/public/assets")
+    task :symlink, :roles => assets_role, :except => {:no_release => true} do
+      run <<-CMD.compact
+        rm -rf #{latest_release}/public/#{assets_prefix} &&
+        mkdir -p #{latest_release}/public &&
+        mkdir -p #{shared_path}/#{shared_assets_prefix} &&
+        ln -s #{shared_path}/#{shared_assets_prefix} #{latest_release}/public/#{assets_prefix}
+      CMD
     end
   end
 end
