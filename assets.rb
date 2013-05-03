@@ -1,10 +1,21 @@
+set_default(:assets_role) { [:web] }
+
+before "deploy:finalize_update", "deploy:assets:symlink"
+after "deploy:update_code", "deploy:assets:precompile"
+
 namespace :deploy do
   namespace :assets do
-    desc "Run the precompile task locally and rsync with shared"
     task :precompile, :roles => assets_role, :except => {:no_release => true} do
-      %x{bundle exec rake assets:precompile}
-      %x{rsync --recursive --times --rsh=ssh --compress --human-readable --progress public/assets #{user}@#{host}:#{shared_path}}
-      %x{bundle exec rake assets:clean}
+      run_locally "rake assets:clean && rake assets:precompile"
+      run_locally "cd public && tar -jcf assets.tar.bz2 assets"
+      top.upload "public/assets.tar.bz2", "#{shared_path}", :via => :scp
+      run "cd #{shared_path} && tar -jxf assets.tar.bz2 && rm assets.tar.bz2"
+      run_locally "rm public/assets.tar.bz2"
+      run_locally "rake assets:clean"
+    end
+
+    task :symlink, roles: :web do
+      run ("rm -rf #{latest_release}/public/assets && mkdir -p #{latest_release}/public && mkdir -p #{shared_path}/assets && ln -s #{shared_path}/assets #{latest_release}/public/assets")
     end
   end
 end
