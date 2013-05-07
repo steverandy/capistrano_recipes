@@ -29,7 +29,7 @@ end
 
 set_default(:symlink_shared_pair) { [] }
 
-after "deploy:finalize_update", "deploy:symlink_shared"
+before "deploy:finalize_update", "deploy:symlink_shared"
 after "deploy:restart", "deploy:set_releases_permissions"
 
 namespace :deploy do
